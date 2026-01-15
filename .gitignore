@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+
+# Django
+db.sqlite3
+
+# ML models
+models_ml/*.h5
+models_ml/*.pkl
+
+# OS files
+.DS_Store
+Thumbs.db

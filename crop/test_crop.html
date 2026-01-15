@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crop Recommendation Test</title>
+</head>
+<body>
+    <h2>Crop Recommendation Test</h2>
+
+    <form action="http://127.0.0.1:8000/crop/predict/" method="post">
+        Nitrogen: <input type="number" name="N" step="any" required><br><br>
+        Phosphorus: <input type="number" name="P" step="any" required><br><br>
+        Potassium: <input type="number" name="K" step="any" required><br><br>
+        Temperature: <input type="number" name="temperature" step="any" required><br><br>
+        Humidity: <input type="number" name="humidity" step="any" required><br><br>
+        pH: <input type="number" name="ph" step="any" required><br><br>
+        Rainfall: <input type="number" name="rainfall" step="any" required><br><br>
+
+        <button type="submit">Predict Crop</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AgriBot Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 90%;
+            margin: auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #2e7d32;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #2e7d32;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #1b5e20;
+        }
+        input {
+            margin: 5px 0;
+            padding: 8px;
+            width: 100%;
+        }
+        .result {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #1b5e20;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🌾 AgriBot – Smart Farming Assistant</h1>
+
+    <!-- Crop Recommendation -->
+    <div class="card">
+        <h2>Crop Recommendation</h2>
+
+        <input id="N" placeholder="Nitrogen">
+        <input id="P" placeholder="Phosphorus">
+        <input id="K" placeholder="Potassium">
+        <input id="temperature" placeholder="Temperature">
+        <input id="humidity" placeholder="Humidity">
+        <input id="ph" placeholder="pH">
+        <input id="rainfall" placeholder="Rainfall">
+
+        <button onclick="predictCrop()">Recommend Crop</button>
+
+        <div class="result" id="cropResult"></div>
+    </div>
+
+    <!-- Disease Prediction -->
+    <div class="card">
+        <h2>Disease Prediction</h2>
+
+        <input type="file" id="leafImage">
+        <button onclick="predictDisease()">Predict Disease</button>
+
+        <div class="result" id="diseaseResult"></div>
+    </div>
+</div>
+<div class="card">
+    <h2>AgriBot Chat</h2>
+    <input id="chatInput" placeholder="Ask me anything...">
+    <button onclick="sendMessage()">Send</button>
+    <div class="result" id="chatReply"></div>
+</div>
+
+<script>
+function predictCrop() {
+    const formData = new FormData();
+    formData.append("N", document.getElementById("N").value);
+    formData.append("P", document.getElementById("P").value);
+    formData.append("K", document.getElementById("K").value);
+    formData.append("temperature", document.getElementById("temperature").value);
+    formData.append("humidity", document.getElementById("humidity").value);
+    formData.append("ph", document.getElementById("ph").value);
+    formData.append("rainfall", document.getElementById("rainfall").value);
+
+    fetch("http://127.0.0.1:8000/crop/predict/", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("cropResult").innerText =
+            "Recommended Crop: " + data.recommended_crop;
+    });
+}
+
+function predictDisease() {
+    const fileInput = document.getElementById("leafImage");
+    const formData = new FormData();
+    formData.append("image", fileInput.files[0]);
+
+    fetch("http://127.0.0.1:8000/disease/predict/", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("diseaseResult").innerText =
+            "Disease: " + data.disease + "\nRemedy: " + data.remedy;
+    });
+}
+function sendMessage() {
+    const message = document.getElementById("chatInput").value;
+
+    fetch("http://127.0.0.1:8000/chatbot/chat/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ message: message })
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("chatReply").innerText = data.reply;
+    });
+}
+
+</script>
+
+</body>
+</html>
